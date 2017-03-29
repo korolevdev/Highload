@@ -1,3 +1,0 @@
--module(httpd_accept_pool).
-
--behaviour(supervisor).
