@@ -1,3 +1,0 @@
--module(httpd).
-
--behaviour(supervisor).

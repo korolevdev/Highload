@@ -1,3 +1,0 @@
--module(app).
-
--behaviour(application).
