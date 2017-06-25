@@ -25,7 +25,31 @@ fun main(args: Array<String>) {
 }
 
 fun setAffinity(cores: Int) {
-   
+   if (cores <= 0) {
+        println("Invalid concurrency value")
+        return
+    }
+    val availableProcessors = Runtime.getRuntime().availableProcessors()
+    println("Available processors: $availableProcessors")
+    if (cores >= availableProcessors) {
+        return
+    }
+    val systemName = System.getProperty("os.name")
+    val pid = ManagementFactory.getRuntimeMXBean().getName().substringBefore('@').toInt()
+    val mask = 1 shl cores - 1
+    if (isWindows(systemName)) {
+        Runtime.getRuntime().exec("cmd /c C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell \"\$Process = Get-Process -ID $pid; \$Process.ProcessorAffinity=$mask\"")
+    } else if (isLinux(systemName)) {
+        Runtime.getRuntime().exec("taskset -p $mask $pid")
+    } else {
+        println("Can not set affinity on your OS")
+        return
+    }
+    println("Waiting for available processors value to change... ")
+    while (Runtime.getRuntime().availableProcessors() != cores) {
+        Thread.sleep(100)
+    }
+    println("Avaliable processors: $cores")
 }
 
 fun isWindows(systemName: String): Boolean = systemName.contains("win", true)
