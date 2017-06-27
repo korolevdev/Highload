@@ -4,11 +4,6 @@ import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-val dateFormat by lazy {
-    val format = SimpleDateFormat("EEE, dd MMM, yyyy HH:mm:ss z", Locale.ENGLISH)
-    format.timeZone = TimeZone.getTimeZone("GMT");
-    format
-}
 
 class Response(val stream: OutputStream,
                val status: Status) {
@@ -28,6 +23,8 @@ class Response(val stream: OutputStream,
     }
 
     private fun commonResponse(): StringBuilder {
+        val dateFormat = SimpleDateFormat("EEE, dd MMM, yyyy HH:mm:ss z", Locale.ENGLISH)
+        dateFormat.timeZone = TimeZone.getTimeZone("GMT");
         val sb = StringBuilder()
         sb.appendln("HTTP/1.1 ${status.code} ${status.value}")
                 .appendln("Date: ${dateFormat.format(Date())}")

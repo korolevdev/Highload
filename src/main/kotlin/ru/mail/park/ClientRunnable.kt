@@ -7,9 +7,9 @@ import java.net.Socket
 import java.net.URLDecoder
 
 
-class Client(val socket: Socket,
-             val root: String) {
-    fun process() {
+class ClientRunnable(val socket: Socket,
+                     val root: String) : Runnable {
+    override fun run() {
         try {
             val requestLine = BufferedReader(InputStreamReader(socket.getInputStream())).readLine()
             val split = requestLine.split(" ")
